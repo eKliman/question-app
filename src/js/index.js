@@ -17,6 +17,7 @@ const askBtn = questionForm.querySelector('#question__button');
 const allQuestionsBtn = document.getElementById('header__btn');
 const listTitle = document.getElementById('list-title');
 const questionInputsClearBtn = document.getElementById('question__clear');
+export const list = document.getElementById('question__list');
 export const header = document.getElementById('header');
 
 function submitFormHandler(event) {
@@ -139,7 +140,7 @@ function switchToAdminInterface() {
   adminButtonsHandler();
 }
 
-function notEmpty(target) {
+export function notEmpty(target) {
   if (target.value) {
     if (!target.classList.contains('not-empty')) {
       target.classList.add('not-empty');
@@ -173,3 +174,8 @@ questionForm.addEventListener('input', (event) => {
 });
 questionInputsClearBtn.addEventListener('click', clearQuestionFormInputs);
 allQuestionsBtn.addEventListener('click', openModal);
+list.addEventListener('click', (event) => {
+  if (event.target.closest('.form__item-delete')) {
+    Question.deleteItem(event.target);
+  }
+});

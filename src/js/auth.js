@@ -1,4 +1,5 @@
 import { addToLocalStorage } from './question.js';
+import { notEmpty } from './index.js';
 
 export function createModal() {
   const body = document.querySelector('body');
@@ -11,11 +12,11 @@ export function createModal() {
       <form class="form auth-form" id="auth-form">
         <h3 class="form__title">Authorization</h3>
         <div class="form__input-block auth-email">
-          <input type="email" class="form__input" id="auth__email" placeholder=" ">
+          <input type="email" class="form__input" id="auth__email" placeholder=" " value="admin@test.mail">
           <label for="auth__email" class="form__label">* Email:</label>
         </div>
         <div class="form__input-block">
-          <input type="password" class="form__input" id="auth__password" placeholder=" ">
+          <input type="password" class="form__input" id="auth__password" placeholder=" " value="123456789">
           <label for="auth__password" class="form__label">* Password:</label>
         </div>
         <p class="error" id="modal-error"></p>
@@ -26,6 +27,10 @@ export function createModal() {
     </div>
   `;
   body.insertAdjacentElement('beforeend', modal);
+
+  modal.querySelectorAll('input').forEach((element) => {
+    notEmpty(element);
+  });
 
   modal.addEventListener('click', function (event) {
     if (

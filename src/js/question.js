@@ -1,3 +1,4 @@
+import { list } from './index.js';
 export let token;
 
 export class Question {
@@ -45,8 +46,18 @@ export class Question {
       });
   }
 
+  static deleteItem(item) {
+    const dataId = item.dataset.id;
+    renderAfterDelete(dataId);
+    return fetch(
+      `https://question-app-25e67.firebaseio.com/questions/${dataId}.json`,
+      {
+        method: 'DELETE',
+      }
+    );
+  }
+
   static renderList(content) {
-    const list = document.getElementById('question__list');
     let htmlList;
 
     if (token) {
@@ -89,22 +100,51 @@ export function renderWithoutAuth() {
   Question.renderList(content);
 }
 
+function renderAfterDelete(itemId) {
+  Question.fetch(token).then((data) => {
+    const Questions = data.filter((item) => item.id != itemId);
+    Question.renderList(Questions);
+  });
+}
+
 function toCard(question) {
-  return `
-  <div class="form__item">
-    <div class="form__item-date">
-      ${new Date(question.date).toLocaleDateString()}
-      ${new Date(question.date).toLocaleTimeString()}
+  Question.checkIsToken();
+  if (token) {
+    return `
+    <div class="form__item">
+      <div class="form__item-body">
+        <div class="form__item-date">
+          ${new Date(question.date).toLocaleDateString()}
+          ${new Date(question.date).toLocaleTimeString()}
+        </div>
+        <div class="form__item-text">${question.text}</div>
+        <div class="form__item-author">
+          <span class="form__author-name" id="form__author-name">${
+            question.name || ''
+          }</span>
+          <span class="form__author-email" id="form__author-email">${
+            question.email || ''
+          }</span>
+        </div>      
+      </div>
+      <div class="form__item-buttons">
+        <button type="button" class="form__item-delete" data-id="${
+          question.id
+        }" title="Delete question">&times;</button>
+      </div>
     </div>
-    <div class="form__item-text">${question.text}</div>
-    <div class="form__item-author">
-      <span class="form__author-name" id="form__author-name">${
-        question.name || ''
-      }</span>
-      <span class="form__author-email" id="form__author-email">${
-        question.email || ''
-      }</span>
+    `;
+  } else {
+    return `
+    <div class="form__item" data-id="${question.id}">
+      <div class="form__item-body">
+        <div class="form__item-date">
+          ${new Date(question.date).toLocaleDateString()}
+          ${new Date(question.date).toLocaleTimeString()}
+        </div>
+        <div class="form__item-text">${question.text}</div>
+      </div>
     </div>
-  </div>
-  `;
+    `;
+  }
 }

@@ -104,7 +104,7 @@ body {
 
 .questions-block {
   width: 100%;
-  padding: 25px 0 25px 30px;
+  padding: 15px 0 25px 30px;
 }
 
 .form {
@@ -169,8 +169,6 @@ body {
     background-color: #4141ec;
     color: #fff;
     border: none;
-    font-family: "Roboto-Bold";
-    font-weight: 700;
     font-size: 24px;
     outline: none;
     cursor: pointer;
@@ -220,9 +218,14 @@ body {
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);
     border-radius: 5px;
     padding: 10px;
+    display: flex;
+    justify-content: space-between;
     &:last-child {
       margin-bottom: 0;
     }
+  }
+  &__item-body {
+    width: 100%;
   }
   &__item-date {
     border-bottom: 1px solid #aaa;
@@ -241,6 +244,25 @@ body {
   }
   &__author-email {
     font-size: 15px;
+  }
+  &__item-delete {
+    border: none;
+    background-color: transparent;
+    font-family: "Roboto-Bold";
+    font-weight: 700;
+    font-size: 35px;
+    color: #ee1616;
+    outline: none;
+    cursor: pointer;
+    transition: 0.1s;
+    &:hover {
+      transform: scale(1.05);
+      outline: none;
+    }
+    &:active {
+      outline: none;
+      transform: scale(1);
+    }
   }
   &.question-form {
     margin-bottom: 30px;
@@ -303,4 +325,5 @@ body {
 .error {
   color: #ff0000;
   margin-top: 20px;
+  margin-bottom: 15px;
 }
