@@ -4,15 +4,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="favicon.ico">
   <title>Question form</title>
 </head>
 
 <body>
-  <div class="header">
-    <h1 class="header__title">Question form</h1>
-  </div>
 
   <div class="container">
+    <div class="header" id="header">
+      <h1 class="header__title">Question form</h1>
+      <button class="header__btn" id="header__btn">All questions</button>
+    </div>
+
+    <div class="questions-block">
+      <form class="form question-form" id="question-form">
+        <h2 class="form__title">Ask your question</h2>
+        <div class="form__input-block">
+          <input type="text" class="form__input" id="question__input" placeholder=" ">
+          <label for="question__input" class="form__label">* What do you want to ask?</label>
+        </div>
+        <div class="form__contacts">
+          <div class="form__input-block form__name-block">
+            <input type="text" class="form__input" id="question__name" placeholder=" ">
+            <label for="question__name" class="form__label">* Your name:</label>
+          </div>
+          <div class="form__input-block">
+            <input type="email" class="form__input" id="question__email" placeholder=" ">
+            <label for="question__email" class="form__label">Email:</label>
+          </div>
+        </div>
+        <div class="form__buttons">
+          <button type="submit" class="form__button" id="question__button" disabled>Ask</button>
+          <button type="button" class="form__button clear-button" id="question__clear">Clear</button>
+          <p class="form__required-fields">* Required fields</p>
+        </div>
+      </form>
+
+      <div class="form">
+        <h2 class="form__title" id="list-title">Your latest questions</h2>
+        <div class="form__list" id="question__list"></div>
+      </div>
+    </div>
 
   </div>
 

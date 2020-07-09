@@ -1,11 +1,19 @@
 const path = require('path');
-const HTMLPlugin = require('html-webpack-plugin');
+const HTMLWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+const postcssNormalize = require('postcss-normalize');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
+const isProd = process.env.NODE_ENV === 'production';
+
+const PATHS = {
+  src: path.resolve(__dirname, 'src'),
+  dist: path.resolve(__dirname, 'dist'),
+};
 
 const optimization = () => {
   const config = {
@@ -14,7 +22,7 @@ const optimization = () => {
     },
   };
 
-  if (!isDev) {
+  if (isProd) {
     config.minimizer = [
       new OptimizeCssAssetsWebpackPlugin(),
       new TerserWebpackPlugin(),
@@ -25,7 +33,7 @@ const optimization = () => {
 };
 
 const filename = (ext) =>
-  isDev ? `[name].${ext}` : `[name].[contenthash].min.${ext}`;
+  isDev ? `[name].${ext}` : `[name].[contenthash:8].min.${ext}`;
 
 const cssLoaders = (extra) => {
   const loaders = [
@@ -37,6 +45,22 @@ const cssLoaders = (extra) => {
       },
     },
     'css-loader',
+    {
+      loader: require.resolve('postcss-loader'),
+      options: {
+        ident: 'postcss',
+        plugins: () => [
+          require('postcss-flexbugs-fixes'),
+          require('postcss-preset-env')({
+            // autoprefixer: {
+            // flexbox: 'no-2009',
+            // },
+            stage: 3,
+          }),
+          // postcssNormalize(),
+        ],
+      },
+    },
   ];
 
   if (extra) {
@@ -47,33 +71,62 @@ const cssLoaders = (extra) => {
 };
 
 module.exports = {
-  context: path.resolve(__dirname, 'src'),
+  context: PATHS.src,
   mode: 'development',
-  entry: ['@babel/polyfill', './script.js'],
+  entry: ['@babel/polyfill', './js/index.js'],
   output: {
     filename: filename('js'),
-    path: path.resolve(__dirname, 'public'),
+    path: PATHS.dist,
+    // publicPath: '/dist/',
   },
   devServer: {
     port: 3000,
-    hot: true,
+    hot: isDev,
+    watchContentBase: true,
   },
   optimization: optimization(),
   devtool: isDev ? 'source-map' : '',
   plugins: [
     new CleanWebpackPlugin(),
-    new HTMLPlugin({
-      template: './index.html',
+    new HTMLWebpackPlugin({
+      template: `${PATHS.src}/index.html`,
       minify: {
-        collapseWhitespace: !isDev,
+        collapseWhitespace: isProd,
+        removeComments: isProd,
+        removeRedundantAttributes: isProd,
+        useShortDoctype: isProd,
+        removeEmptyAttributes: isProd,
+        removeStyleLinkTypeAttributes: isProd,
+        keepClosingSlash: isProd,
+        minifyJS: isProd,
+        minifyCSS: isProd,
+        minifyURLs: isProd,
       },
     }),
     new MiniCssExtractPlugin({
       filename: filename('css'),
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: `${PATHS.src}/favicon.ico`,
+          to: PATHS.dist,
+        },
+      ],
+    }),
   ],
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+          },
+        },
+      },
       {
         test: /\.css$/,
         use: cssLoaders(),
@@ -83,17 +136,17 @@ module.exports = {
         use: cssLoaders('sass-loader'),
       },
       {
-        test: /\.(woff|woff2)$/,
-        use: ['file-loader'],
+        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'file-loader',
+        options: {
+          name: 'fonts/[name].[ext]',
+        },
       },
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-          },
+        test: /\.(png|jpg|jpeg|gif|svg)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[contenthash:8].[ext]',
         },
       },
     ],

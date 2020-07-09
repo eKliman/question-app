@@ -6,13 +6,17 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --mode development --open 'firefox'",
     "build": "cross-env NODE_ENV=production webpack --mode production",
-    "dev": "cross-env NODE_ENV=development webpack --mode development"
+    "dev": "cross-env NODE_ENV=development webpack --mode development",
+    "watch": "cross-env NODE_ENV=development webpack --mode development --watch"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eKliman/question-app.git"
   },
-  "browserslist": "> 0.25%, not dead",
+  "browserslist": [
+    "> 0.2%",
+    "last 3 version"
+  ],
   "keywords": [
     "js",
     "javascript"
@@ -26,8 +30,10 @@
   "devDependencies": {
     "@babel/core": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
+    "autoprefixer": "^9.8.2",
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.0.2",
     "cross-env": "^7.0.2",
     "css-loader": "^3.6.0",
     "file-loader": "^6.0.0",
@@ -35,6 +41,11 @@
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.14.1",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "postcss-cli": "^7.1.1",
+    "postcss-flexbugs-fixes": "^4.2.1",
+    "postcss-loader": "^3.0.0",
+    "postcss-normalize": "^9.0.0",
+    "postcss-preset-env": "^6.7.0",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.2.1",
     "terser-webpack-plugin": "^3.0.6",
