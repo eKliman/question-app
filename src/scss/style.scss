@@ -117,6 +117,11 @@ body {
     display: none;
     margin-top: -30px;
   }
+  &__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
   &__title {
     font-family: "Roboto-Bold";
     font-weight: 700;
@@ -125,6 +130,7 @@ body {
     color: #4141ec;
     display: flex;
     flex-wrap: wrap;
+    width: 100%;
     &::after {
       content: "";
       width: 100%;
@@ -132,6 +138,44 @@ body {
       background-color: #4141ec;
       margin-top: 3px;
     }
+  }
+  &__sorting {
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    min-width: 130px;
+    // line-height: 2;
+    &::after {
+      content: "\25BC";
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 6px 5px 4px 5px;
+      background: #4141ec;
+      color: #fff;
+      cursor: pointer;
+      pointer-events: none;
+      transition: 0.25s;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+    &:hover::after {
+      color: #a1ade2;
+    }
+  }
+  &__select {
+    appearance: none;
+    margin-left: 25px;
+    width: 100%;
+    border: none;
+    padding: 5px;
+    outline: none;
+    border-radius: 4px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.45);
+    background-color: #5b5bfd;
+    color: #fff;
+    cursor: pointer;
   }
   &__input-block {
     position: relative;
@@ -147,6 +191,12 @@ body {
     }
     &.not-empty ~ label {
       transform: translateY(-1.2em);
+    }
+    &:active,
+    &:focus {
+      outline: none;
+      border: none;
+      border-bottom: 2px solid #008000;
     }
   }
   &__label {

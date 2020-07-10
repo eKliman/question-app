@@ -1,5 +1,5 @@
 import { addToLocalStorage } from './question.js';
-import { notEmpty } from './index.js';
+import { checkNotEmpty } from './index.js';
 
 export function createModal() {
   const body = document.querySelector('body');
@@ -29,7 +29,7 @@ export function createModal() {
   body.insertAdjacentElement('beforeend', modal);
 
   modal.querySelectorAll('input').forEach((element) => {
-    notEmpty(element);
+    checkNotEmpty(element);
   });
 
   modal.addEventListener('click', function (event) {

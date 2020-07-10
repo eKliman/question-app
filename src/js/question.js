@@ -1,4 +1,5 @@
 import { list } from './index.js';
+import { sortQuestions } from './utils.js';
 export let token;
 
 export class Question {
@@ -48,7 +49,6 @@ export class Question {
 
   static deleteItem(item) {
     const dataId = item.dataset.id;
-    renderAfterDelete(dataId);
     return fetch(
       `https://question-app-25e67.firebaseio.com/questions/${dataId}.json`,
       {
@@ -97,10 +97,10 @@ export function removeFromLocalStorage(key) {
 
 export function renderWithoutAuth() {
   const content = getDataFromLocalStorage('questions');
-  Question.renderList(content);
+  Question.renderList(sortQuestions(content, select.value));
 }
 
-function renderAfterDelete(itemId) {
+export function renderAfterDelete(itemId) {
   Question.fetch(token).then((data) => {
     const Questions = data.filter((item) => item.id != itemId);
     Question.renderList(Questions);

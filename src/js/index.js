@@ -1,10 +1,14 @@
 // import { createModal } from './auth.js';
 import { validation } from './utils.js';
 import { createAdminButtons } from './utils.js';
+import { sortQuestions } from './utils.js';
+import { switchSort } from './utils.js';
 import { Question } from './question';
 import { token } from './question';
 import { renderWithoutAuth } from './question';
 import { removeFromLocalStorage } from './question';
+import { renderAfterDelete } from './question';
+import { getDataFromLocalStorage } from './question';
 import '../../node_modules/normalize.css/normalize.css';
 import '../scss/fonts.scss';
 import '../scss/style.scss';
@@ -17,6 +21,7 @@ const askBtn = questionForm.querySelector('#question__button');
 const allQuestionsBtn = document.getElementById('header__btn');
 const listTitle = document.getElementById('list-title');
 const questionInputsClearBtn = document.getElementById('question__clear');
+const select = document.getElementById('select');
 export const list = document.getElementById('question__list');
 export const header = document.getElementById('header');
 
@@ -28,7 +33,8 @@ function submitFormHandler(event) {
     validation(name.value, 3, 30)
   ) {
     const question = {
-      date: new Date().toJSON(),
+      // date: new Date().toJSON(),
+      date: Date.now(),
       text: questionInput.value.trim(),
       name: name.value.trim(),
       email: email.value || '',
@@ -59,7 +65,7 @@ function openModal() {
     auth.createModal();
     const authForm = document.getElementById('auth-form');
     authForm.addEventListener('input', (event) => {
-      notEmpty(event.target);
+      checkNotEmpty(event.target);
     }),
       { once: true };
     authForm.addEventListener('submit', authFormHandler), { once: true };
@@ -71,11 +77,11 @@ function clearAuthInputs() {
   const password = document.querySelector('#auth__password');
   if (email) {
     email.value = '';
-    notEmpty(email);
+    checkNotEmpty(email);
   }
   if (password) {
     password.value = '';
-    notEmpty(password);
+    checkNotEmpty(password);
   }
 }
 
@@ -107,7 +113,7 @@ function renderAfterAuth(content) {
     const modal = document.getElementById('modal-auth');
     modal ? modal.remove() : '';
     switchToAdminInterface();
-    Question.renderList(content);
+    Question.renderList(sortQuestions(content, select.value));
   }
 }
 
@@ -118,7 +124,9 @@ function adminButtonsHandler() {
       renderWithoutAuth();
       switchToUserInterface();
     } else if (event.target.closest('#header__btn-update')) {
-      Question.fetch(token).then(Question.renderList);
+      Question.fetch(token).then((content) => {
+        Question.renderList(sortQuestions(content, select.value));
+      });
     }
   });
 }
@@ -127,6 +135,7 @@ function switchToUserInterface() {
   header.querySelector('#header__admin').remove();
   header.querySelector('#header__btn-out').remove();
   header.querySelector('#header__btn-update').remove();
+  switchSort(select, false);
   allQuestionsBtn.classList.remove('hide');
   questionForm.classList.remove('hide');
   listTitle.textContent = 'Your latest questions';
@@ -136,11 +145,12 @@ function switchToAdminInterface() {
   allQuestionsBtn.classList.add('hide');
   questionForm.classList.add('hide');
   listTitle.textContent = 'List of questions';
+  switchSort(select, true);
   createAdminButtons();
   adminButtonsHandler();
 }
 
-export function notEmpty(target) {
+export function checkNotEmpty(target) {
   if (target.value) {
     if (!target.classList.contains('not-empty')) {
       target.classList.add('not-empty');
@@ -154,13 +164,14 @@ function clearQuestionFormInputs() {
   const questionFormInputs = questionForm.querySelectorAll('input');
   questionFormInputs.forEach((element) => {
     element.value = '';
-    notEmpty(element);
+    checkNotEmpty(element);
   });
 }
 
 window.addEventListener('load', () => {
   clearQuestionFormInputs();
   Question.checkIsToken();
+  switchSort(select, token);
   if (token) {
     Question.fetch(token).then(renderAfterAuth);
   } else {
@@ -169,13 +180,28 @@ window.addEventListener('load', () => {
 });
 questionForm.addEventListener('submit', submitFormHandler);
 questionForm.addEventListener('input', (event) => {
-  notEmpty(event.target);
+  checkNotEmpty(event.target);
   enableBtn();
 });
 questionInputsClearBtn.addEventListener('click', clearQuestionFormInputs);
 allQuestionsBtn.addEventListener('click', openModal);
 list.addEventListener('click', (event) => {
   if (event.target.closest('.form__item-delete')) {
+    renderAfterDelete(event.target.dataset.id);
     Question.deleteItem(event.target);
   }
+});
+select.addEventListener('change', () => {
+  Question.checkIsToken();
+  if (token) {
+    Question.fetch(token).then((data) => {
+      console.log(data);
+      Question.renderList(sortQuestions(data, select.value));
+    });
+  } else {
+    const content = getDataFromLocalStorage('questions');
+    Question.renderList(sortQuestions(content, select.value));
+  }
+  // sortQuestions(questions, sortType);
+  // console.log(select.value);
 });
