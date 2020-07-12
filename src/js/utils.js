@@ -1,9 +1,53 @@
 import { header } from './index.js';
+let message;
 
-export function validation(value, min, max) {
-  const question = value.trim().length;
-  let valid = question >= min && question <= max;
-  return valid;
+export function validation(target) {
+  let min, max;
+  if (/input$/.test(target.id)) {
+    min = 10;
+    max = 256;
+  } else if (/password$/.test(target.id)) {
+    min = 6;
+    max = 30;
+  } else if (/email$/.test(target.id)) {
+    min = 0;
+    max = 30;
+  } else {
+    min = 3;
+    max = 30;
+  }
+
+  checkInputValueLength(target, min, max);
+
+  if (
+    (/email$/.test(target.id) && target.value) ||
+    /auth__email$/.test(target.id)
+  ) {
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(target.value)
+      ? (message = `Email is not valid`)
+      : '';
+  }
+
+  target.parentElement.querySelector('p').textContent = message;
+
+  if (message) {
+    target.style.borderBottom = '2px solid #ff0000';
+    return false;
+  } else {
+    target.style.borderBottom = '2px solid #8788a7';
+    return true;
+  }
+}
+
+function checkInputValueLength(target, min, max) {
+  const contentLength = target.value.trim().length;
+  if (contentLength < min) {
+    message = `${target.name} must be at least ${min} characters`;
+  } else if (contentLength > max) {
+    message = `${target.name} must be no more than ${max} characters`;
+  } else {
+    message = '';
+  }
 }
 
 export function createAdminButtons() {

@@ -29,8 +29,9 @@ function submitFormHandler(event) {
   event.preventDefault();
 
   if (
-    validation(questionInput.value, 10, 256) &&
-    validation(name.value, 3, 30)
+    validation(questionInput) &&
+    validation(name) &&
+    (validation(email) || !email.value)
   ) {
     const question = {
       // date: new Date().toJSON(),
@@ -45,18 +46,8 @@ function submitFormHandler(event) {
     Question.create(question).then(() => {
       clearQuestionFormInputs();
       renderWithoutAuth();
+      askBtn.disabled = false;
     });
-  }
-}
-
-function enableBtn() {
-  if (
-    validation(questionInput.value, 10, 256) &&
-    validation(name.value, 3, 30)
-  ) {
-    askBtn.disabled = false;
-  } else {
-    askBtn.disabled = true;
   }
 }
 
@@ -64,10 +55,12 @@ function openModal() {
   import('./auth.js').then((auth) => {
     auth.createModal();
     const authForm = document.getElementById('auth-form');
-    authForm.addEventListener('input', (event) => {
-      checkNotEmpty(event.target);
-    }),
-      { once: true };
+    authForm.addEventListener('focusout', (event) => {
+      if (event.target.closest('input')) {
+        checkNotEmpty(event.target);
+        validation(event.target);
+      }
+    });
     authForm.addEventListener('submit', authFormHandler), { once: true };
   });
 }
@@ -87,21 +80,24 @@ function clearAuthInputs() {
 
 function authFormHandler(event) {
   event.preventDefault();
-  document.getElementById('modal__button').disabled = true;
-  const email = event.target.querySelector('#auth__email').value;
-  const password = event.target.querySelector('#auth__password').value;
-  clearAuthInputs();
-  import('./auth.js').then((auth) => {
-    auth
-      .authWithEmailAndPassword(email, password)
-      .catch(console.error)
-      .then(Question.fetch)
-      .then(renderAfterAuth);
-  });
+  const email = event.target.querySelector('#auth__email');
+  const password = event.target.querySelector('#auth__password');
+  if (validation(email) && validation(password)) {
+    document.getElementById('modal__button').disabled = true;
+
+    clearAuthInputs();
+    import('./auth.js').then((auth) => {
+      auth
+        .authWithEmailAndPassword(email.value, password.value)
+        .catch(console.error)
+        .then(Question.fetch)
+        .then(renderAfterAuth);
+    });
+  }
 }
 
 function renderAfterAuth(content) {
-  const modalError = document.getElementById('modal-error');
+  const modalError = document.getElementById('modal-auth-error');
   if (typeof content === 'string') {
     clearAuthInputs();
     document.getElementById('modal__button').disabled = false;
@@ -179,9 +175,11 @@ window.addEventListener('load', () => {
   }
 });
 questionForm.addEventListener('submit', submitFormHandler);
-questionForm.addEventListener('input', (event) => {
-  checkNotEmpty(event.target);
-  enableBtn();
+questionForm.addEventListener('focusout', (event) => {
+  if (event.target.closest('input')) {
+    checkNotEmpty(event.target);
+    validation(event.target);
+  }
 });
 questionInputsClearBtn.addEventListener('click', clearQuestionFormInputs);
 allQuestionsBtn.addEventListener('click', openModal);
@@ -202,6 +200,4 @@ select.addEventListener('change', () => {
     const content = getDataFromLocalStorage('questions');
     Question.renderList(sortQuestions(content, select.value));
   }
-  // sortQuestions(questions, sortType);
-  // console.log(select.value);
 });

@@ -196,7 +196,7 @@ body {
     &:focus {
       outline: none;
       border: none;
-      border-bottom: 2px solid #008000;
+      border-bottom: 2px solid #4141ec;
     }
   }
   &__label {
@@ -374,6 +374,10 @@ body {
 
 .error {
   color: #ff0000;
-  margin-top: 20px;
-  margin-bottom: 15px;
+  font-size: 15px;
+  &.auth-error {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 17px;
+  }
 }
