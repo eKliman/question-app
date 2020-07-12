@@ -80,15 +80,16 @@ function clearAuthInputs() {
 
 function authFormHandler(event) {
   event.preventDefault();
-  const email = event.target.querySelector('#auth__email');
-  const password = event.target.querySelector('#auth__password');
-  if (validation(email) && validation(password)) {
+  const emailInput = event.target.querySelector('#auth__email');
+  const passwordInput = event.target.querySelector('#auth__password');
+  if (validation(emailInput) && validation(passwordInput)) {
     document.getElementById('modal__button').disabled = true;
-
+    const email = emailInput.value;
+    const password = passwordInput.value;
     clearAuthInputs();
     import('./auth.js').then((auth) => {
       auth
-        .authWithEmailAndPassword(email.value, password.value)
+        .authWithEmailAndPassword(email, password)
         .catch(console.error)
         .then(Question.fetch)
         .then(renderAfterAuth);
@@ -193,7 +194,6 @@ select.addEventListener('change', () => {
   Question.checkIsToken();
   if (token) {
     Question.fetch(token).then((data) => {
-      console.log(data);
       Question.renderList(sortQuestions(data, select.value));
     });
   } else {
