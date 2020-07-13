@@ -12,6 +12,7 @@ import { getDataFromLocalStorage } from './question';
 import '../../node_modules/normalize.css/normalize.css';
 import '../scss/fonts.scss';
 import '../scss/style.scss';
+import '../scss/media.scss';
 
 const questionForm = document.getElementById('question-form');
 const questionInput = questionForm.querySelector('#question__input');
@@ -129,18 +130,18 @@ function adminButtonsHandler() {
 }
 
 function switchToUserInterface() {
-  header.querySelector('#header__admin').remove();
-  header.querySelector('#header__btn-out').remove();
-  header.querySelector('#header__btn-update').remove();
+  header.querySelector('#admin-buttons')
+    ? header.querySelector('#admin-buttons').remove()
+    : '';
   switchSort(select, false);
-  allQuestionsBtn.classList.remove('hide');
-  questionForm.classList.remove('hide');
+  allQuestionsBtn.classList.remove('hidden');
+  questionForm.classList.remove('hidden');
   listTitle.textContent = 'Your latest questions';
 }
 
 function switchToAdminInterface() {
-  allQuestionsBtn.classList.add('hide');
-  questionForm.classList.add('hide');
+  allQuestionsBtn.classList.add('hidden');
+  questionForm.classList.add('hidden');
   listTitle.textContent = 'List of questions';
   switchSort(select, true);
   createAdminButtons();
@@ -158,15 +159,22 @@ export function checkNotEmpty(target) {
 }
 
 function clearQuestionFormInputs() {
-  const questionFormInputs = questionForm.querySelectorAll('input');
+  const questionFormInputs = questionForm.querySelectorAll('.form__input');
   questionFormInputs.forEach((element) => {
     element.value = '';
     checkNotEmpty(element);
   });
 }
 
+function changeContent() {
+  window.innerWidth <= 450
+    ? (allQuestionsBtn.textContent = 'All')
+    : (allQuestionsBtn.textContent = 'All questions');
+}
+
 window.addEventListener('load', () => {
   clearQuestionFormInputs();
+  changeContent();
   Question.checkIsToken();
   switchSort(select, token);
   if (token) {
@@ -177,7 +185,7 @@ window.addEventListener('load', () => {
 });
 questionForm.addEventListener('submit', submitFormHandler);
 questionForm.addEventListener('focusout', (event) => {
-  if (event.target.closest('input')) {
+  if (event.target.closest('.form__input')) {
     checkNotEmpty(event.target);
     validation(event.target);
   }
@@ -201,3 +209,5 @@ select.addEventListener('change', () => {
     Question.renderList(sortQuestions(content, select.value));
   }
 });
+
+window.addEventListener('resize', changeContent);

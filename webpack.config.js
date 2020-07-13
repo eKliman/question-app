@@ -112,6 +112,10 @@ module.exports = {
           from: `${PATHS.src}/favicon.ico`,
           to: PATHS.dist,
         },
+        {
+          from: `${PATHS.src}/img`,
+          to: `${PATHS.dist}/img`,
+        },
       ],
     }),
   ],
@@ -146,7 +150,7 @@ module.exports = {
         test: /\.(png|jpg|jpeg|gif|svg)$/,
         loader: 'file-loader',
         options: {
-          name: '[name].[contenthash:8].[ext]',
+          name: 'img/[name].[contenthash:8].[ext]',
         },
       },
     ],

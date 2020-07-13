@@ -54,9 +54,21 @@ export function createAdminButtons() {
   header.insertAdjacentHTML(
     'beforeend',
     `
-    <span class="header__admin" id="header__admin">Administrator</span>
-    <button class="header__btn header__btn-out" id="header__btn-out">Log out</button>
-    <button class="header__btn" id="header__btn-update">Update questions</button>
+    <div class="header__admin-buttons" id="admin-buttons">
+      <span class="header__admin" id="header__admin">Administrator</span>
+      <button class="header__btn header__btn-update" id="header__btn-update" title="Update questions">    
+      <svg class="header__icon-update" id="icon-refresh" width="30" height="30">
+        <use xlink:href="img/icons.svg#refresh"></use>
+      </svg>
+      <span class="header__text-update" id="text-update">Update questions</span>
+      </button>
+      <button class="header__btn header__btn-out" id="header__btn-out"  title="Logout">
+        <svg class="header__icon-logout" id="icon-logout" width="30" height="30">
+          <use xlink:href="img/icons.svg#logOut"></use>
+        </svg>
+        <span class="header__text-logout" id="text-logout">Log out</span>
+      </button>
+    </div>
   `
   );
 }

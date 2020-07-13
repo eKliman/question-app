@@ -13,14 +13,14 @@
   <div class="container">
     <div class="header" id="header">
       <h1 class="header__title">Question form</h1>
-      <button class="header__btn" id="header__btn">All questions</button>
+      <button class="header__btn" id="header__btn" title="Show all questions">All questions</button>
     </div>
 
     <div class="questions-block">
       <form class="form question-form" id="question-form" novalidate>
         <h2 class="form__title">Ask your question</h2>
         <div class="form__input-block">
-          <input type="text" class="form__input" id="question__input" name="Question" placeholder=" ">
+          <textarea class="form__input textarea" name="Question" id="question__input"></textarea>
           <p class="error" id="question-error"></p>
           <label for="question__input" class="form__label">* What do you want to ask?</label>
         </div>
@@ -47,7 +47,7 @@
         <div class="form__header">
           <h2 class="form__title" id="list-title">Your latest questions</h2>
           <div class="form__sorting">
-            <select class="form__select" id="select">
+            <select class="form__select" id="select" title="Sort by">
               <option value="dateUp" defaultSelected selected="true">Date &#11014;</option>
               <option value="dateDown">Date &#11015;</option>
             </select>
@@ -58,7 +58,6 @@
     </div>
 
   </div>
-
 </body>
 
 </html>

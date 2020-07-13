@@ -9,7 +9,7 @@ export function createModal() {
   modal.innerHTML = `
     <div class="modal__inner" id="modal__inner">
       <button class="modal__close" id="modal__close" type="button">&times;</button>
-      <form class="form auth-form" id="auth-form">
+      <form class="form auth-form" id="auth-form" novalidate>
         <h3 class="form__title">Authorization</h3>
         <div class="form__input-block auth-email">
           <input type="email" class="form__input" id="auth__email" name="Email" placeholder=" " value="admin@test.mail">

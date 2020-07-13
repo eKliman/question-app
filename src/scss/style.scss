@@ -44,6 +44,7 @@ body {
 
 .container {
   max-width: 1700px;
+  min-width: 320px;
   width: 100%;
   margin: 0 auto;
   padding: 0 20px;
@@ -86,13 +87,22 @@ body {
       box-shadow: none;
       transform: scale(1);
     }
-    &.hide {
+    &.hidden {
       display: none;
     }
     &.header__btn-out {
       font-family: "Roboto-Bold";
       font-weight: 700;
     }
+  }
+  &__admin-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+  &__icon-update,
+  &__icon-logout {
+    display: none;
+    fill: #4141ec;
   }
   &__admin {
     font-size: 22px;
@@ -113,7 +123,7 @@ body {
   box-shadow: 0px 7px 24.3px 2.7px rgba(7, 18, 114, 0.24);
   border-radius: 5px;
   background-color: #eceef3;
-  &.hide {
+  &.hidden {
     display: none;
     margin-top: -30px;
   }
@@ -145,7 +155,6 @@ body {
     justify-content: space-between;
     position: relative;
     min-width: 130px;
-    // line-height: 2;
     &::after {
       content: "\25BC";
       position: absolute;
@@ -197,6 +206,9 @@ body {
       outline: none;
       border: none;
       border-bottom: 2px solid #4141ec;
+    }
+    &.textarea {
+      resize: none;
     }
   }
   &__label {
