@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.10.1",
-    "normalize.css": "^8.0.1"
+    "normalize.css": "^8.0.1",
+    "whatwg-fetch": "^3.2.0"
   }
 }

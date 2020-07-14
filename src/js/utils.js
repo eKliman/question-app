@@ -1,5 +1,5 @@
 import { header } from './index.js';
-let message;
+let errorMessage = '';
 
 export function validation(target) {
   let min, max;
@@ -24,13 +24,13 @@ export function validation(target) {
     /auth__email$/.test(target.id)
   ) {
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(target.value)
-      ? (message = `Email is not valid`)
+      ? (errorMessage = `Email is not valid`)
       : '';
   }
 
-  target.parentElement.querySelector('p').textContent = message;
+  target.parentElement.querySelector('p').textContent = errorMessage;
 
-  if (message) {
+  if (errorMessage) {
     target.style.borderBottom = '2px solid #ff0000';
     return false;
   } else {
@@ -42,11 +42,11 @@ export function validation(target) {
 function checkInputValueLength(target, min, max) {
   const contentLength = target.value.trim().length;
   if (contentLength < min) {
-    message = `${target.name} must be at least ${min} characters`;
+    errorMessage = `${target.name} must be at least ${min} characters`;
   } else if (contentLength > max) {
-    message = `${target.name} must be no more than ${max} characters`;
+    errorMessage = `${target.name} must be no more than ${max} characters`;
   } else {
-    message = '';
+    errorMessage = '';
   }
 }
 
@@ -102,11 +102,11 @@ export function sortQuestions(questions, sortType) {
 export function switchSort(select, token) {
   token
     ? (select.innerHTML = `
-    <option value="dateUp" defaultSelected selected="true">Date &#11014;</option>
+    <option value="dateUp" selected>Date &#11014;</option>
     <option value="dateDown">Date &#11015;</option>
     <option value="nameUp">Name &#11014;</option>
     <option value="nameDown">Name &#11015;</option>`)
     : (select.innerHTML = `
-    <option value="dateUp" defaultSelected selected="true">Date &#11014;</option>
+    <option value="dateUp" selected>Date &#11014;</option>
     <option value="dateDown">Date &#11015;</option>`);
 }

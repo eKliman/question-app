@@ -1,4 +1,6 @@
 // import { createModal } from './auth.js';
+import { Polyfill } from './polyfills.js';
+import 'whatwg-fetch';
 import { validation } from './utils.js';
 import { createAdminButtons } from './utils.js';
 import { sortQuestions } from './utils.js';
@@ -25,6 +27,11 @@ const questionInputsClearBtn = document.getElementById('question__clear');
 const select = document.getElementById('select');
 export const list = document.getElementById('question__list');
 export const header = document.getElementById('header');
+
+Polyfill.closest();
+Polyfill.forEach();
+Polyfill.matches();
+Polyfill.remove();
 
 function submitFormHandler(event) {
   event.preventDefault();
